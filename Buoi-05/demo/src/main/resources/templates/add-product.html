@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm sản phẩm mới</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #1a1a2e;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        label .required {
+            color: #ef4444;
+            margin-left: 3px;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="file"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input.error,
+        select.error {
+            border-color: #ef4444;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .help-text {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+        }
+        
+        input[type="file"] {
+            cursor: pointer;
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-info {
+            background-color: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Thêm sản phẩm mới</h1>
+            <p class="subtitle">Vui lòng điền đầy đủ thông tin sản phẩm</p>
+            
+            <div class="alert alert-info">
+                <strong>Lưu ý:</strong> Tên sản phẩm không được để trống. Giá sản phẩm từ 1 - 9,999,999.
+            </div>
+            
+            <form th:action="@{/products/add}" th:object="${product}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="productCode">
+                        Mã sản phẩm <span class="required">*</span>
+                    </label>
+                    <input type="text" 
+                           id="productCode" 
+                           th:field="*{productCode}" 
+                           th:classappend="${#fields.hasErrors('productCode')} ? 'error' : ''"
+                           placeholder="Nhập mã sản phẩm (VD: LP001)">
+                    <span class="error-message" th:if="${#fields.hasErrors('productCode')}" th:errors="*{productCode}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="name">
+                        Tên sản phẩm <span class="required">*</span>
+                    </label>
+                    <input type="text" 
+                           id="name" 
+                           th:field="*{name}" 
+                           th:classappend="${#fields.hasErrors('name')} ? 'error' : ''"
+                           placeholder="Nhập tên sản phẩm">
+                    <span class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                    <span class="help-text">Tên sản phẩm không được để trống</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="price">
+                        Giá sản phẩm (VNĐ) <span class="required">*</span>
+                    </label>
+                    <input type="number" 
+                           id="price" 
+                           th:field="*{price}" 
+                           th:classappend="${#fields.hasErrors('price')} ? 'error' : ''"
+                           placeholder="Nhập giá sản phẩm"
+                           min="1"
+                           max="9999999">
+                    <span class="error-message" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+                    <span class="help-text">Giá sản phẩm từ 1 đến 9,999,999</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">
+                        Danh mục <span class="required">*</span>
+                    </label>
+                    <select id="category" 
+                            th:field="*{category}" 
+                            th:classappend="${#fields.hasErrors('category')} ? 'error' : ''"
+                            required>
+                        <option value="">Chọn danh mục</option>
+                        <option th:each="cat : ${categories}" 
+                                th:value="${cat.id}" 
+                                th:text="${cat.name}"></option>
+                    </select>
+                    <span class="error-message" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">
+                        Hình ảnh
+                    </label>
+                    <div class="file-input-wrapper">
+                        <input type="file" 
+                               id="image" 
+                               name="image" 
+                               accept="image/*"
+                               th:classappend="${#fields.hasErrors('imageName')} ? 'error' : ''">
+                    </div>
+                    <span class="error-message" th:if="${#fields.hasErrors('imageName')}" th:errors="*{imageName}"></span>
+                    <span class="help-text">Chọn hình ảnh cho sản phẩm</span>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+                    <a href="/products" class="btn btn-secondary">Hủy bỏ</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Hiển thị tên file khi chọn
+        document.getElementById('image').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                console.log('Selected file:', fileName);
+            }
+        });
+    </script>
+</body>
+</html>
